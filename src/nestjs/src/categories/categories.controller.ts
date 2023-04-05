@@ -16,15 +16,12 @@ import {
   Put,
   HttpCode,
   Query,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { SearchCategoryDto } from './dto/search-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-//Unit tests
-
-// Inject - casos - mongoose, typeorm
-//unidade - request e response
 @Controller('categories')
 export class CategoriesController {
   @Inject(CreateCategoryUseCase.UseCase)
@@ -42,8 +39,6 @@ export class CategoriesController {
   @Inject(ListCategoriesUseCase.UseCase)
   private listUseCase: ListCategoriesUseCase.UseCase;
 
-  //Arquitetura Hexagonal - Ports
-
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.createUseCase.execute(createCategoryDto);
@@ -59,7 +54,7 @@ export class CategoriesController {
     return this.getUseCase.execute({ id });
   }
 
-  @Put(':id') //PUT vs PATCH
+  @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -70,7 +65,7 @@ export class CategoriesController {
     });
   }
 
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.deleteUseCase.execute({ id });
