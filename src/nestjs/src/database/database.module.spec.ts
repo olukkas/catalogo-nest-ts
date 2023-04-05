@@ -65,6 +65,5 @@ describe('DatabaseModule Unit Tests', () => {
       const { error } = schema.validate(connOptions);
       expect(error).toBeUndefined();
     });
-
   });
 });
