@@ -1,13 +1,13 @@
-import { SortDirection } from '@fc/micro-videos/@seedwork/domain';
+import { SortDirection } from '@fc/micro-videos/dist/@seedwork/domain';
 import {
   CreateCategoryUseCase,
   UpdateCategoryUseCase,
   GetCategoryUseCase,
   ListCategoriesUseCase,
-} from '@fc/micro-videos/category/application';
-import { CategoriesController } from '../categories.controller';
-import { CreateCategoryDto } from '../dto/create-category.dto';
-import { UpdateCategoryDto } from '../dto/update-category.dto';
+} from '@fc/micro-videos/dist/category/application';
+import { CategoriesController } from '../../categories.controller';
+import { CreateCategoryDto } from '../../dto/create-category.dto';
+import { UpdateCategoryDto } from '../../dto/update-category.dto';
 
 describe('CategoriesController Unit Tests', () => {
   let controller: CategoriesController;
