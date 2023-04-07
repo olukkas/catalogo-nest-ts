@@ -8,6 +8,7 @@ import {
 import { CategoriesController } from '../../categories.controller';
 import { CreateCategoryDto } from '../../dto/create-category.dto';
 import { UpdateCategoryDto } from '../../dto/update-category.dto';
+import { CategoryPresenter } from '../../presenter/category.presenter';
 
 describe('CategoriesController Unit Tests', () => {
   let controller: CategoriesController;
@@ -17,7 +18,7 @@ describe('CategoriesController Unit Tests', () => {
   });
 
   it('should creates a category', async () => {
-    const expectedOutput: CreateCategoryUseCase.Output = {
+    const output: CreateCategoryUseCase.Output = {
       id: '9366b7dc-2d71-4799-b91c-c64adb205104',
       name: 'Movie',
       description: 'some description',
@@ -25,7 +26,7 @@ describe('CategoriesController Unit Tests', () => {
       created_at: new Date(),
     };
     const mockCreateUseCase = {
-      execute: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
+      execute: jest.fn().mockReturnValue(Promise.resolve(output)),
     };
     //@ts-expect-error defined part of methods
     controller['createUseCase'] = mockCreateUseCase;
@@ -34,9 +35,11 @@ describe('CategoriesController Unit Tests', () => {
       description: 'some description',
       is_active: true,
     };
-    const output = await controller.create(input);
+    const presenter = await controller.create(input);
+
     expect(mockCreateUseCase.execute).toHaveBeenCalledWith(input);
-    expect(expectedOutput).toStrictEqual(output);
+    expect(presenter).toBeInstanceOf(CategoryPresenter);
+    expect(presenter).toStrictEqual(new CategoryPresenter(output));
   });
 
   it('should updates a category', async () => {
@@ -129,6 +132,3 @@ describe('CategoriesController Unit Tests', () => {
     expect(expectedOutput).toStrictEqual(output);
   });
 });
-
-//repository in memory
-//casos de uso - mock
