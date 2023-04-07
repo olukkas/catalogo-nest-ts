@@ -15,6 +15,7 @@ import { CATEGORY_PROVIDERS } from '../../category.providers';
 import { CategoryRepository } from '@fc/micro-videos/category/domain';
 import { CategorySequelize } from '@fc/micro-videos/category/infra';
 import CategoryModel = CategorySequelize.CategoryModel;
+import { NotFoundError } from 'rxjs';
 
 describe('CategoriesController integration tests', function () {
   let controller: CategoriesController;
@@ -154,6 +155,16 @@ describe('CategoriesController integration tests', function () {
         expect(presenter.is_active).toBe(expectedOutput.is_active);
         expect(presenter.created_at).toStrictEqual(entity.created_at);
       },
+    );
+  });
+
+  it('should delete a category', async () => {
+    const category = await factory.create();
+    const response = await controller.remove(category.id);
+
+    expect(response).not.toBeDefined();
+    await expect(repository.findById(category.id)).rejects.toThrow(
+      new NotFoundError(`Entity Not Found using ID ${category.id}`),
     );
   });
 });
