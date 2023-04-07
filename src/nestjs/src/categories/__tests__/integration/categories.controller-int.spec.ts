@@ -13,6 +13,7 @@ import {
 } from '@fc/micro-videos/category/application';
 import { CATEGORY_PROVIDERS } from '../../category.providers';
 import { CategoryRepository } from '@fc/micro-videos/category/domain';
+import { text } from 'express';
 
 describe('CategoriesController integration tests', function () {
   let controller: CategoriesController;
@@ -47,6 +48,49 @@ describe('CategoriesController integration tests', function () {
     );
     expect(controller['listUseCase']).toBeInstanceOf(
       ListCategoriesUseCase.UseCase,
+    );
+  });
+
+  describe('should create a category', function () {
+    const arrange = [
+      {
+        request: {
+          name: 'Movie',
+        },
+        expectedOutput: {
+          name: 'Movie',
+          description: null,
+          is_active: true,
+        },
+      },
+      {
+        request: {
+          name: 'Movie',
+          description: 'Category to handle movies',
+          is_active: false,
+        },
+        expectedOutput: {
+          name: 'Movie',
+          description: 'Category to handle movies',
+          is_active: false,
+        },
+      },
+    ];
+
+    test.each(arrange)(
+      'with request $request',
+      async ({ request, expectedOutput }) => {
+        const output = await controller.create(request);
+        const entity = await repository.findById(output.id);
+
+        expect(entity).toMatchObject({
+          id: output.id,
+          name: expectedOutput.name,
+          description: expectedOutput.description,
+          is_active: expectedOutput.is_active,
+          created_at: output.created_at,
+        });
+      },
     );
   });
 });

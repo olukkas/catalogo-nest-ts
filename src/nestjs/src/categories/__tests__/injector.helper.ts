@@ -16,7 +16,7 @@ export type Initializer = {
 export class InjectorHelper {
   constructor(private repo: CategoryRepository.Repository) {}
 
-  initUseCases(cases: Initializer[], controller: CategoriesController,) {
+  initUseCases(cases: Initializer[], controller: CategoriesController) {
     for (const { name, useCase } of cases) {
       controller[name] = new useCase(this.repo);
     }
