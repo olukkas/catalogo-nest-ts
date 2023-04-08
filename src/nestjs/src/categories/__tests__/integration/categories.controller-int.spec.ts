@@ -167,4 +167,16 @@ describe('CategoriesController integration tests', function () {
       new NotFoundError(`Entity Not Found using ID ${category.id}`),
     );
   });
+
+  it('should get a category', async () => {
+    const category = await factory.create();
+    const response = await controller.findOne(category.id);
+
+    expect(response).toBeDefined();
+    expect(response.id).toBe(category.id);
+    expect(response.description).toBe(category.description);
+    expect(response.name).toBe(category.name);
+    expect(response.is_active).toBe(category.is_active);
+    expect(response.created_at).toStrictEqual(category.created_at);
+  });
 });
