@@ -1,7 +1,7 @@
 import UniqueEntityId from "../../../@seedwork/domain/value-objects/unique-entity-id.vo";
 import Entity from "../../../@seedwork/domain/entity/entity";
 import CategoryValidatorFactory from "../validators/category.validator";
-import { EntityValidationError } from "../../../@seedwork/domain/errors/validation-error";
+import { EntityValidationError } from '#seedwork/domain';
 
 export type CategoryProperties = {
   name: string;
@@ -9,6 +9,8 @@ export type CategoryProperties = {
   is_active?: boolean;
   created_at?: Date;
 };
+
+export class CategoryId extends UniqueEntityId{}
 
 export class Category extends Entity<CategoryProperties> {
   constructor(public readonly props: CategoryProperties, id?: UniqueEntityId) {
@@ -62,10 +64,6 @@ export class Category extends Entity<CategoryProperties> {
 
   get is_active() {
     return this.props.is_active;
-  }
-
-  private set is_active(value: boolean) {
-    this.props.is_active = value ?? true;
   }
 
   get created_at() {

@@ -1,4 +1,4 @@
-import { Category } from './category';
+import { Category, CategoryId } from './category';
 import { Chance } from 'chance';
 
 
@@ -8,6 +8,8 @@ type PropOrFactory<T> = T | ((index: number) => T);
 export class CategoryFakeBuilder<TBuild = any> {
   private chance: Chance.Chance;
   private readonly countObjs: number;
+
+  private _entity_id = undefined;
   private _name: PropOrFactory<string> = (_index) => this.chance.word();
   private _description: PropOrFactory<string | null> = (_index) => this.chance.paragraph();
   private _is_active: PropOrFactory<boolean> = (_index) => true;
@@ -25,6 +27,11 @@ export class CategoryFakeBuilder<TBuild = any> {
 
   static theCategories(countObjs: number) {
     return new CategoryFakeBuilder<Category[]>(countObjs);
+  }
+
+  withEntityId(valueOrFactory: PropOrFactory<CategoryId>) {
+    this._entity_id = valueOrFactory;
+    return this;
   }
 
   withName(valueOrFactory: PropOrFactory<string>) {

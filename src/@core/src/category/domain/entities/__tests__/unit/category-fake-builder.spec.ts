@@ -1,8 +1,38 @@
 import { CategoryFakeBuilder } from '../../category-fake-builder';
 import { Chance } from 'chance';
+import { CategoryId } from '../../category';
 
 
 describe('CategoryFakeBuilder Unit tests', function () {
+
+  describe("entity_id prop", () => {
+    const faker = CategoryFakeBuilder.aCategory();
+
+    it("should throw error when any with methods has called", () => {
+      expect(() => faker["getValue"]("entity_id")).toThrow(
+        new Error(
+          "Property entity_id not have a factory, use 'with' methods"
+        )
+      );
+    });
+
+    it("should be undefined", () => {
+      expect(faker["_entity_id"]).toBeUndefined();
+    });
+
+    test("withEntityId", () => {
+      const categoryId = new CategoryId();
+      const $this = faker.withEntityId(categoryId);
+      expect($this).toBeInstanceOf(CategoryFakeBuilder);
+      expect(faker["_entity_id"]).toBe(categoryId);
+
+      faker.withEntityId(() => categoryId);
+      expect(faker["_entity_id"]()).toBe(categoryId);
+
+      expect(faker.entity_id).toBe(categoryId);
+    });
+
+  });
 
   describe('name prop', function () {
     const faker = CategoryFakeBuilder.aCategory();
@@ -40,6 +70,29 @@ describe('CategoryFakeBuilder Unit tests', function () {
 
       expect(categories[0].name).toBe(`test name 0`);
       expect(categories[1].name).toBe(`test name 1`);
+    });
+
+    test("invalid empty case", () => {
+      const $this = faker.withInvalidNameEmpty(undefined);
+      expect($this).toBeInstanceOf(CategoryFakeBuilder);
+      expect(faker["_name"]).toBeUndefined();
+
+      faker.withInvalidNameEmpty(null);
+      expect(faker["_name"]).toBeNull();
+
+      faker.withInvalidNameEmpty("");
+      expect(faker["_name"]).toBe("");
+    });
+
+    test("invalid too long case", () => {
+      const $this = faker.withInvalidNameTooLong();
+      expect($this).toBeInstanceOf(CategoryFakeBuilder);
+      expect(faker["_name"].length).toBe(256);
+
+      const tooLong = "a".repeat(256);
+      faker.withInvalidNameTooLong(tooLong);
+      expect(faker["_name"].length).toBe(256);
+      expect(faker["_name"]).toBe(tooLong);
     });
   });
 
