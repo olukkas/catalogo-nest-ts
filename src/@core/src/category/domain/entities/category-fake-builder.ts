@@ -14,6 +14,10 @@ export class CategoryFakeBuilder<TBuild = any> {
 
   private _created_at = undefined;
 
+  private constructor(countObjs: number = 1) {
+    this.countObjs = countObjs;
+    this.chance = Chance();
+  }
 
   static aCategory() {
     return new CategoryFakeBuilder<Category>();
@@ -21,12 +25,6 @@ export class CategoryFakeBuilder<TBuild = any> {
 
   static theCategories(countObjs: number) {
     return new CategoryFakeBuilder<Category[]>(countObjs);
-  }
-
-
-  private constructor(countObjs: number = 1) {
-    this.countObjs = countObjs;
-    this.chance = Chance();
   }
 
   withName(valueOrFactory: PropOrFactory<string>) {
