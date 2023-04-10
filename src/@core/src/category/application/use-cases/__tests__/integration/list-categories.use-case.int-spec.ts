@@ -2,6 +2,7 @@ import { ListCategoriesUseCase } from "../../list-categories.use-case";
 import { CategorySequelize } from '#category/infra';
 import { setupSequelize } from '#seedwork/infra';
 import { CategoryFakeBuilder } from '#category/domain/entities/category-fake-builder';
+import { Category } from '#category/domain';
 
 const { CategoryRepository, CategoryModel } = CategorySequelize;
 
@@ -43,7 +44,7 @@ describe("ListCategoriesUseCase Integration Tests", () => {
   it("should returns output using pagination, sort and filter", async () => {
     const names = ['a', 'AAA', 'AaA', 'b', 'c'];
 
-    const entities = CategoryFakeBuilder
+    const entities = Category.fake()
       .theCategories(5)
       .withName(index => names[index])
       .build();
