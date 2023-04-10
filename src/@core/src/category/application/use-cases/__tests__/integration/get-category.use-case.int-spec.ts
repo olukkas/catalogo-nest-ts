@@ -1,7 +1,8 @@
 import {GetCategoryUseCase} from "../../get-category.use-case";
 import NotFoundError from "../../../../../@seedwork/domain/errors/not-found.error";
-import { CategorySequelize } from "../../../../infra/db/sequelize/category-sequelize";
-import { setupSequelize } from "../../../../../@seedwork/infra/testing/helpers/db";
+import { CategorySequelize } from '#category/infra';
+import { setupSequelize } from '#seedwork/infra';
+import { CategoryFakeBuilder } from '#category/domain/entities/category-fake-builder';
 
 const { CategoryRepository, CategoryModel } = CategorySequelize;
 
@@ -23,14 +24,16 @@ describe("GetCategoryUseCase Integration Tests", () => {
   });
 
   it("should returns a category", async () => {
-    const model = await CategoryModel.factory().create();
-    const output = await useCase.execute({ id: model.id });
+    const entity = CategoryFakeBuilder.aCategory().build();
+    await repository.insert(entity);
+
+    const output = await useCase.execute({ id: entity.id });
     expect(output).toStrictEqual({
-      id: model.id,
-      name: model.name,
-      description: model.description,
-      is_active: model.is_active,
-      created_at: model.created_at,
+      id: entity.id,
+      name: entity.name,
+      description: entity.description,
+      is_active: entity.is_active,
+      created_at: entity.created_at,
     });
   });
 });

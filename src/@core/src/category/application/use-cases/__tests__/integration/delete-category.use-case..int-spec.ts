@@ -1,7 +1,8 @@
 import {DeleteCategoryUseCase} from "../../delete-category.use-case";
 import NotFoundError from "../../../../../@seedwork/domain/errors/not-found.error";
-import { CategorySequelize } from "../../../../infra/db/sequelize/category-sequelize";
-import { setupSequelize } from "../../../../../@seedwork/infra/testing/helpers/db";
+import { CategorySequelize } from '#category/infra';
+import { setupSequelize } from '#seedwork/infra';
+import { CategoryFakeBuilder } from '#category/domain/entities/category-fake-builder';
 
 const { CategoryRepository, CategoryModel } = CategorySequelize;
 
@@ -23,11 +24,14 @@ describe("DeleteCategoryUseCase Integration Tests", () => {
   });
 
   it("should delete a category", async () => {
-    const model = await CategoryModel.factory().create();
+    const entity = CategoryFakeBuilder.aCategory().build();
+    await repository.insert(entity);
+
     await useCase.execute({
-      id: model.id,
+      id: entity.id,
     });
-    const noHasModel = await CategoryModel.findByPk(model.id)
+
+    const noHasModel = await CategoryModel.findByPk(entity.id)
     expect(noHasModel).toBeNull();
   });
 });
