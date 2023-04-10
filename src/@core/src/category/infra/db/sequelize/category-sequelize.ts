@@ -57,12 +57,14 @@ export namespace CategorySequelize {
     }
   }
 
-  export class CategoryRepository
-    implements CategoryRepositoryContract.Repository
-  {
+  export class CategoryRepository implements CategoryRepositoryContract.Repository {
     sortableFields: string[] = ["name", "created_at"];
 
     constructor(private categoryModel: typeof CategoryModel) {}
+
+    async bulkInsert(entities: Category[]): Promise<void> {
+      await this.categoryModel.bulkCreate(entities.map(e => e.toJSON()));
+    }
 
     async insert(entity: Category): Promise<void> {
       await this.categoryModel.create(entity.toJSON());

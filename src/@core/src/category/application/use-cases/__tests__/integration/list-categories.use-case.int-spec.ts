@@ -48,8 +48,7 @@ describe("ListCategoriesUseCase Integration Tests", () => {
       .withName(index => names[index])
       .build();
 
-    for (const entity of entities)
-      await repository.insert(entity);
+    await repository.bulkInsert(entities);
 
     let output = await useCase.execute({
       page: 1,
