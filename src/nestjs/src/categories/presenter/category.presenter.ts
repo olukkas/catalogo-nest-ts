@@ -63,7 +63,7 @@ export abstract class CollectionPresenter {
     return this.paginationPresenter;
   }
 
-  // abstract get data();
+  abstract get data();
 }
 
 export class CategoryCollectionPresenter extends CollectionPresenter {
