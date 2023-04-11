@@ -12,15 +12,12 @@ import {
   UpdateCategoryUseCase,
 } from '@fc/micro-videos/category/application';
 import { CATEGORY_PROVIDERS } from '../../category.providers';
-import { CategoryRepository } from '@fc/micro-videos/category/domain';
-import { CategorySequelize } from '@fc/micro-videos/category/infra';
-import CategoryModel = CategorySequelize.CategoryModel;
+import { Category, CategoryRepository } from '@fc/micro-videos/category/domain';
 import { NotFoundError } from 'rxjs';
 
 describe('CategoriesController integration tests', function () {
   let controller: CategoriesController;
   let repository: CategoryRepository.Repository;
-  const factory = CategorySequelize.CategoryModel.factory();
 
   beforeEach(async () => {
     const modulo = await Test.createTestingModule({
@@ -104,11 +101,9 @@ describe('CategoriesController integration tests', function () {
   });
 
   describe('should update a category', function () {
-    let category: CategoryModel;
+    const category = Category.fake().aCategory().build();
 
-    beforeEach(async () => {
-      category = await factory.create();
-    });
+    beforeEach(async () => await repository.insert(category));
 
     const arrange = [
       {
@@ -159,7 +154,9 @@ describe('CategoriesController integration tests', function () {
   });
 
   it('should delete a category', async () => {
-    const category = await factory.create();
+    const category = Category.fake().aCategory().build();
+
+    await repository.insert(category);
     const response = await controller.remove(category.id);
 
     expect(response).not.toBeDefined();
@@ -169,7 +166,8 @@ describe('CategoriesController integration tests', function () {
   });
 
   it('should get a category', async () => {
-    const category = await factory.create();
+    const category = Category.fake().aCategory().build();
+    await repository.insert(category);
     const response = await controller.findOne(category.id);
 
     expect(response).toBeDefined();
