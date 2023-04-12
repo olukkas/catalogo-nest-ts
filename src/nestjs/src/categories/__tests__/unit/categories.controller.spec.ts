@@ -8,7 +8,10 @@ import {
 import { CategoriesController } from '../../categories.controller';
 import { CreateCategoryDto } from '../../dto/create-category.dto';
 import { UpdateCategoryDto } from '../../dto/update-category.dto';
-import { CategoryCollectionPresenter, CategoryPresenter } from '../../presenter/category.presenter';
+import {
+  CategoryCollectionPresenter,
+  CategoryPresenter,
+} from '../../presenter/category.presenter';
 
 describe('CategoriesController Unit Tests', () => {
   let controller: CategoriesController;

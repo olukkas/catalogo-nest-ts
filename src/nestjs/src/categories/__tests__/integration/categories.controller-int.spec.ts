@@ -232,8 +232,9 @@ describe('CategoriesController integration tests', function () {
 
     it('should returns categories using pagination, sort and filter', async () => {
       const names = ['a', 'AAA', 'AaA', 'b', 'c'];
+
       const categories = Category.fake()
-        .theCategories(4)
+        .theCategories(5)
         .withName((index) => names[index])
         .build();
 
@@ -241,33 +242,33 @@ describe('CategoriesController integration tests', function () {
 
       const arrange = [
         {
-          send_data: {},
-          expected: {
-            items: [categories[3], categories[2], categories[1], categories[0]],
-            current_page: 1,
-            last_page: 1,
-            per_page: 15,
-            total: 4,
+          send_data: {
+            page: 1,
+            per_page: 2,
+            sort: 'name',
+            filter: 'a',
           },
-        },
-        {
-          send_data: { per_page: 2 },
           expected: {
-            items: [categories[3], categories[2]],
+            items: [categories[1], categories[2]],
             current_page: 1,
             last_page: 2,
             per_page: 2,
-            total: 4,
+            total: 3,
           },
         },
         {
-          send_data: { page: 2, per_page: 2 },
+          send_data: {
+            page: 2,
+            per_page: 2,
+            sort: 'name',
+            filter: 'a',
+          },
           expected: {
-            items: [categories[1], categories[0]],
+            items: [categories[0]],
             current_page: 2,
             last_page: 2,
             per_page: 2,
-            total: 4,
+            total: 3,
           },
         },
       ];
