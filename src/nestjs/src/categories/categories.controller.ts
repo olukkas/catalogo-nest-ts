@@ -21,7 +21,10 @@ import {
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { SearchCategoryDto } from './dto/search-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CategoryPresenter } from './presenter/category.presenter';
+import {
+  CategoryCollectionPresenter,
+  CategoryPresenter,
+} from './presenter/category.presenter';
 
 @Controller('categories')
 export class CategoriesController {
@@ -48,24 +51,28 @@ export class CategoriesController {
   }
 
   @Get()
-  search(@Query() searchParams: SearchCategoryDto) {
-    return this.listUseCase.execute(searchParams);
+  async search(@Query() searchParams: SearchCategoryDto) {
+    return new CategoryCollectionPresenter(
+      await this.listUseCase.execute(searchParams),
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.getUseCase.execute({ id });
+  async findOne(@Param('id') id: string) {
+    return new CategoryPresenter(await this.getUseCase.execute({ id }));
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.updateUseCase.execute({
+    const output = await this.updateUseCase.execute({
       id,
       ...updateCategoryDto,
     });
+
+    return new CategoryPresenter(output);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
